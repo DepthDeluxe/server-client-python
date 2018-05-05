@@ -1,13 +1,16 @@
 import xml.etree.ElementTree as ET
 from .property_decorators import property_is_enum, property_not_empty
+from .permissions_item import ItemWithPermissions
 
 
-class ProjectItem(object):
+class ProjectItem(ItemWithPermissions):
     class ContentPermissions:
         LockedToProject = 'LockedToProject'
         ManagedByOwner = 'ManagedByOwner'
 
     def __init__(self, name, description=None, content_permissions=None, parent_id=None):
+        super(ItemWithPermissions, self).__init__()
+
         self._content_permissions = None
         self._id = None
         self.description = description

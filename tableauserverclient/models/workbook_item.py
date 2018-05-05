@@ -3,12 +3,15 @@ from .exceptions import UnpopulatedPropertyError
 from .property_decorators import property_not_nullable, property_is_boolean
 from .tag_item import TagItem
 from .view_item import ViewItem
+from .permissions_item import ItemWithPermissions
 from ..datetime_helpers import parse_datetime
 import copy
 
 
-class WorkbookItem(object):
+class WorkbookItem(ItemWithPermissions):
     def __init__(self, project_id, name=None, show_tabs=False):
+        super(ItemWithPermissions, self).__init__()
+
         self._connections = None
         self._content_url = None
         self._created_at = None
@@ -43,13 +46,6 @@ class WorkbookItem(object):
     @property
     def id(self):
         return self._id
-
-    @property
-    def preview_image(self):
-        if self._preview_image is None:
-            error = "Workbook item must be populated with its preview image first."
-            raise UnpopulatedPropertyError(error)
-        return self._preview_image()
 
     @property
     def project_id(self):

@@ -1,4 +1,5 @@
-from .endpoint import Endpoint, api, parameter_added_in
+from .endpoint import api, parameter_added_in
+from .permissions_endpoint import EndpointWithPermissions
 from .exceptions import MissingRequiredFieldError
 from .fileuploads_endpoint import Fileuploads
 from .resource_tagger import _ResourceTagger
@@ -21,7 +22,7 @@ ALLOWED_FILE_EXTENSIONS = ['twb', 'twbx']
 logger = logging.getLogger('tableau.endpoint.workbooks')
 
 
-class Workbooks(Endpoint):
+class Workbooks(EndpointWithPermissions):
     def __init__(self, parent_srv):
         super(Workbooks, self).__init__(parent_srv)
         self._resource_tagger = _ResourceTagger(parent_srv)

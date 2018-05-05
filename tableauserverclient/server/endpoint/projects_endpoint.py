@@ -1,12 +1,13 @@
-from .endpoint import Endpoint, api
+from .endpoint import api
 from .exceptions import MissingRequiredFieldError
+from .permissions_endpoint import EndpointWithPermissions
 from .. import RequestFactory, ProjectItem, PaginationItem
 import logging
 
 logger = logging.getLogger('tableau.endpoint.projects')
 
 
-class Projects(Endpoint):
+class Projects(EndpointWithPermissions):
     @property
     def baseurl(self):
         return "{0}/sites/{1}/projects".format(self.parent_srv.baseurl, self.parent_srv.site_id)

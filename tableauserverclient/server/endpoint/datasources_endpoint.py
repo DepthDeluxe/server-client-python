@@ -1,4 +1,5 @@
-from .endpoint import Endpoint, api, parameter_added_in
+from .endpoint import api, parameter_added_in
+from .permissions_endpoint import EndpointWithPermissions
 from .exceptions import MissingRequiredFieldError
 from .fileuploads_endpoint import Fileuploads
 from .resource_tagger import _ResourceTagger
@@ -20,7 +21,7 @@ ALLOWED_FILE_EXTENSIONS = ['tds', 'tdsx', 'tde', 'hyper']
 logger = logging.getLogger('tableau.endpoint.datasources')
 
 
-class Datasources(Endpoint):
+class Datasources(EndpointWithPermissions):
     def __init__(self, parent_srv):
         super(Datasources, self).__init__(parent_srv)
         self._resource_tagger = _ResourceTagger(parent_srv)

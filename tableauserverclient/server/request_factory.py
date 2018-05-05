@@ -109,30 +109,27 @@ class GroupRequest(object):
 
 
 class PermissionRequest(object):
-    def _add_capability(self, parent_element, capability_set, mode):
-        for capability_item in capability_set:
+    def _add_capabilities(self, parent_element, capabilities):
+        for key in capabilities:
+            value = capabilities[key]
+
             capability_element = ET.SubElement(parent_element, 'capability')
-            capability_element.attrib['name'] = capability_item
-            capability_element.attrib['mode'] = mode
+            capability_element.attrib['name'] = key
+            capability_element.attrib['mode'] = value
 
     def add_req(self, permission_item):
         xml_request = ET.Element('tsRequest')
         permissions_element = ET.SubElement(xml_request, 'permissions')
+        item_element = ET.SubElement(permissions_element, permission_item.type)
+        item_element.attrib['id'] = permission_item.item_id
 
-        for user_capability in permission_item.user_capabilities:
-            grantee_element = ET.SubElement(permissions_element, 'granteeCapabilities')
-            grantee_capabilities_element = ET.SubElement(grantee_element, user_capability.User)
-            grantee_capabilities_element.attrib['id'] = user_capability.grantee_id
-            capabilities_element = ET.SubElement(grantee_element, 'capabilities')
-            self._add_capability(capabilities_element, user_capability.allowed, user_capability.Allow)
-            self._add_capability(capabilities_element, user_capability.denied, user_capability.Deny)
+        for grantee_capability in permission_item.grantee_capabilities:
+            grantee_capabilities_element = ET.SubElement(permissions_element, 'granteeCapabilities')
+            grantee_element = ET.SubElement(grantee_capabilities_element, grantee_capability.grantee_type)
+            grantee_element.attrib['id'] = grantee_capability.grantee_id
+            capabilities_element = ET.SubElement(grantee_capabilities_element, 'capabilities')
+            self._add_capabilities(capabilities_element, grantee_capability.capabilities)
 
-        for group_capability in permission_item.group_capabilities:
-            grantee_element = ET.SubElement(permissions_element, 'granteeCapabilities')
-            ET.SubElement(grantee_element, group_capability, id=group_capability.grantee_id)
-            capabilities_element = ET.SubElement(grantee_element, 'capabilities')
-            self._add_capability(capabilities_element, group_capability.allowed, group_capability.Allow)
-            self._add_capability(capabilities_element, group_capability.denied, group_capability.Deny)
         return ET.tostring(xml_request)
 
 

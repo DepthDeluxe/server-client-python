@@ -2,12 +2,15 @@ import xml.etree.ElementTree as ET
 from .exceptions import UnpopulatedPropertyError
 from .property_decorators import property_not_nullable, property_is_boolean
 from .tag_item import TagItem
+from .permissions_item import ItemWithPermissions
 from ..datetime_helpers import parse_datetime
 import copy
 
 
-class DatasourceItem(object):
+class DatasourceItem(ItemWithPermissions):
     def __init__(self, project_id, name=None):
+        super(ItemWithPermissions, self).__init__()
+
         self._connections = None
         self._content_url = None
         self._created_at = None
